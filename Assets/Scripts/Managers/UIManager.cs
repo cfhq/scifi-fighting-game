@@ -8,18 +8,38 @@ public class UIManager : MonoBehaviour
     public GameObject settingsPanel;
     public GameObject loadingPanel;
 
+    [Header("UI SFX")]
+    public SimpleEffectsController uiEffects;
+    public AudioClip buttonClickClip;
+
+    void Awake()
+    {
+        if (uiEffects == null)
+        {
+            uiEffects = GetComponent<SimpleEffectsController>();
+        }
+        if (uiEffects == null)
+        {
+            uiEffects = gameObject.AddComponent<SimpleEffectsController>();
+            uiEffects.spatialBlend = 0f;
+        }
+    }
+
     public void OpenSettings()
     {
+        PlayUIButtonSound();
         settingsPanel.SetActive(true);
     }
 
     public void CloseSettings()
     {
+        PlayUIButtonSound();
         settingsPanel.SetActive(false);
     }
 
     public void StartGame()
     {
+        PlayUIButtonSound();
         StartCoroutine(StartGameRoutine());
     }
 
@@ -34,8 +54,17 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadScene("gameplay");
     }
 
-public void QuitGame()
+    public void QuitGame()
     {
+        PlayUIButtonSound();
         Application.Quit();
+    }
+
+    void PlayUIButtonSound()
+    {
+        if (uiEffects != null)
+        {
+            uiEffects.PlayOneShot(buttonClickClip, 0.5f);
+        }
     }
 }
